@@ -10,7 +10,7 @@ jobs:
     name: Bootstrap and create matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.veracity-bootstrap.outputs.veracity-matrix }}
+      veracity-matrix: ${{ steps.veracity-bootstrap.outputs.veracity-matrix }}
     steps:
       - name: Checkout CI repo
         uses: actions/checkout@v4
@@ -33,6 +33,10 @@ jobs:
           # Collect list of cloned repo directories (assumes one subdir per repo)
           repo_list=$(for repo in $dirs; do echo "\"$repo\""; done | paste -sd, -)
           echo "veracity-matrix={\"repo\":[${repo_list}]}" >> $GITHUB_OUTPUT
+
+          echo "repo_list: $repo_list"
+
+          echo "veracity-matrix: veracity-matrix={\"repo\":[${repo_list}]}"
 
   veracity-unit-test:
     name: "veracity: unit tests"
