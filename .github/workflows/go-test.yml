@@ -1,0 +1,58 @@
+name: unit tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  setup:
+    name: Bootstrap and create matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.veracity-bootstrap.outputs.veracity-matrix }}
+    steps:
+      - name: Checkout CI repo
+        uses: actions/checkout@v4
+
+      - name: "veracity: bootstrap & create matrix"
+        id: veracity-bootstrap
+        run: |
+          # Target dir to clone into
+          export TARGET_DIR="veracity"
+
+          # Download and execute the bootstrap script
+          GIT_BOOTSTRAP_SH=$(curl -fsSL https://raw.githubusercontent.com/robinbryce/git-bootstrap/refs/heads/main/git-bootstrap.sh)
+          echo "$GIT_BOOTSTRAP_SH" | sh -s -- clone "$TARGET_DIR"
+          echo "$GIT_BOOTSTRAP_SH" | sh -s -- checkout "$TARGET_DIR"
+          dirs=$(echo "$GIT_BOOTSTRAP_SH" | sh -s -- dirs "$TARGET_DIR")
+
+          # Collect list of cloned repo directories (assumes one subdir per repo)
+          repo_list=$(for repo in $dirs; do echo "\"$repo\""; done | paste -sd, -)
+          echo "veracity-matrix={\"repo\":[${repo_list}]}" >> $GITHUB_OUTPUT
+
+  veracity-unit-test:
+    name: "veracity: unit tests"
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.veracity-matrix) }}
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: "cache go module downloads"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            go-${{ runner.os }}-
+
+      - name: "unit test: ${{ matrix.repo }}"
+        run: |
+          cd ${{ matrix.repo }}
+          go test ./...
