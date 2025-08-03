@@ -67,5 +67,5 @@ jobs:
 
       - name: "unit test: ${{ matrix.repo }}"
         run: |
-          cd ${{ matrix.repo }}
+          cd veracity/${{ matrix.repo }}
           go test ./...
