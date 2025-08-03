@@ -23,10 +23,12 @@ jobs:
 
           # Download and execute the bootstrap script
           GIT_BOOTSTRAP_SH=$(curl -fsSL https://raw.githubusercontent.com/robinbryce/git-bootstrap/refs/heads/main/git-bootstrap.sh)
-          dirs=$(echo "$GIT_BOOTSTRAP_SH" | sh -s -- dirs "$TARGET_DIR")
+          dirs=$(sh -c "$GIT_BOOTSTRAP_SH" dirs "$TARGET_DIR")
           echo "DIRS: $dirs"
-          echo "$GIT_BOOTSTRAP_SH" | sh -s -- clone "$TARGET_DIR"
-          echo "$GIT_BOOTSTRAP_SH" | sh -s -- checkout "$TARGET_DIR"
+          # echo "$GIT_BOOTSTRAP_SH" | sh -s -- clone "$TARGET_DIR"
+          # echo "$GIT_BOOTSTRAP_SH" | sh -s -- checkout "$TARGET_DIR"
+          echo  | sh -c "$GIT_BOOTSTRAP_SH" clone "$TARGET_DIR"
+          echo  | sh -c "$GIT_BOOTSTRAP_SH" checkout "$TARGET_DIR"
 
           # Collect list of cloned repo directories (assumes one subdir per repo)
           repo_list=$(for repo in $dirs; do echo "\"$repo\""; done | paste -sd, -)
