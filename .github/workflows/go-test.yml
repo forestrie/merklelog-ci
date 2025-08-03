@@ -68,4 +68,4 @@ jobs:
       - name: "unit test: ${{ matrix.repo }}"
         run: |
           cd veracity/${{ matrix.repo }}
-          go test ./...
+          find . -name go.mod -execdir sh -c 'echo "Running tests in $(pwd)"; go test ./...' \;
