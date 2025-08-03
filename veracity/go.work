@@ -1,0 +1,25 @@
+go 1.24.4
+
+// xreplace (
+// 	github.com/datatrails/go-datatrails-common => ../go-datatrails-common
+// 	github.com/datatrails/go-datatrails-logverification => ../go-datatrails-logverification
+// 	github.com/datatrails/go-datatrails-merklelog/massifs => ../go-datatrails-merklelog/massifs
+// 	github.com/datatrails/go-datatrails-merklelog/mmr => ../go-datatrails-merklelog/mmr
+// 	github.com/datatrails/go-datatrails-serialization/eventsv1 => ../go-datatrails-serialization/eventsv1
+// 	github.com/datatrails/go-datatrails-simplehash => ../go-datatrails-simplehash
+// 	github.com/robinbryce/go-merklelog-azure => ../go-merklelog-azure
+// 	github.com/robinbryce/go-merklelog-fs => ../go-merklelog-fs
+// 	github.com/robinbryce/go-merklelog-provider-testing => ../go-merklelog-provider-testing
+// )
+use (
+	./go-datatrails-common
+	./go-datatrails-logverification
+	./go-datatrails-merklelog/massifs
+	./go-datatrails-merklelog/mmr
+	./go-datatrails-serialization/eventsv1
+	./go-datatrails-simplehash
+	./go-merklelog-azure
+	./go-merklelog-fs
+	./go-merklelog-provider-testing
+	./veracity
+)
